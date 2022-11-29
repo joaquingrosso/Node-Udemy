@@ -58,12 +58,14 @@ const getInfoUsuario = async( id ) => {
         return `El salario del empleado: ${ empleado } es de ${ salario }`;
         
     } catch (error) {
-        throw error;
+        // el throw llama al reject de la funcion asyncrona por eso pasa por el catch
+        return error;
+        // throw error;
     }
 }
 
 
-const id = 3;
+const id = 10;
 
 getInfoUsuario( id )
     .then( msg => {

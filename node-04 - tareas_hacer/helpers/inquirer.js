@@ -26,7 +26,7 @@ const preguntas = [
             },
             {
                 value: '5',
-                name: `${ '5.'.green }Completar tarea(s)`
+                name: `${ '5.'.green } Completar tarea(s)`
             },
             {
                 value: '6',
@@ -58,7 +58,7 @@ const inquirerPausa = async() => {
 
     return await inquirer.prompt({
           type :  'input',
-           name: 'enter',
+           name:  'enter',
         message:  `Presione ${ 'Enter'.green} para continuar`
     });
 }

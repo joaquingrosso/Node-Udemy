@@ -18,11 +18,11 @@ const preguntas = [
             },
             {
                 value: '3',
-                name: `${ '3.'.green } Listar taresas pendientes`
+                name: `${ '3.'.green } Listar tareas pendientes`
             },
             {
                 value: '4',
-                name: `${ '4.'.green } Listar taresas completadas`
+                name: `${ '4.'.green } Listar tareas completadas`
             },
             {
                 value: '5',
@@ -82,8 +82,79 @@ const leerInput = async( mensaje ) => {
     return desc;
 }
 
+
+const listadoTareasBorrar = async( tareas = [] ) => {
+    
+    const choices = tareas.map( (tarea, i) => {
+
+        return {
+            value : tarea.id,
+            name : `${i+1}.`.green + tarea.desc
+        }
+
+    });
+
+    choices.unshift({
+        value : '0',
+        name : '0.'.green + 'Cancelar'            
+    });
+
+    const preguntas = [
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Borrar',
+            choices
+        }
+    ]
+
+    const {id} = await inquirer.prompt(preguntas);
+
+    return id;
+}
+
+const listadoTareasCompletar = async( tareas = [] ) => {
+    
+    const choices = tareas.map( (tarea, i) => {
+
+        return {
+            value : tarea.id,
+            name : `${i+1}.`.green + tarea.desc,
+            checked : (tarea.completadoEn) ? true : false
+        }
+
+    });    
+
+    const preguntas = [
+        {
+            type: 'checkbox',
+            name: 'ids',
+            message: 'Selecciones',
+            choices
+        }
+    ]
+
+    const {ids} = await inquirer.prompt(preguntas);
+
+    return ids;
+}
+
+const confirmar = async ( message ) => {
+    const question = [
+        {
+            type : 'confirm',
+            name : 'ok',
+            message
+        }
+    ];
+
+    const { ok } = await inquirer.prompt(question);
+    return ok;
+
+}
+
 module.exports = {
-    inquirerMenu, inquirerPausa, leerInput
+    inquirerMenu, inquirerPausa, leerInput, listadoTareasBorrar, confirmar,listadoTareasCompletar
 }
 
 

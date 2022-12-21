@@ -13,8 +13,8 @@ const mostrarMenu = () => {
 
         console.log(` ${'1.'.green} Crear tarea `);
         console.log(` ${'2.'.green} Listar tareas `);
-        console.log(` ${'3.'.green} Listar taresas pendientes `);
-        console.log(` ${'4.'.green} Listar taresas completadas `);
+        console.log(` ${'3.'.green} Listar tareas pendientes `);
+        console.log(` ${'4.'.green} Listar tareas completadas `);
         console.log(` ${'5.'.green} Completar tarea `);
         console.log(` ${'6.'.green} Borrar tarea `);
         console.log(` ${'0.'.green} Salir\n`);

@@ -19,7 +19,7 @@ class Server {
         //Rutas
         this.routes();
     };
-
+    
     middlewares(){
         //CORS
         this.app.use( cors() );

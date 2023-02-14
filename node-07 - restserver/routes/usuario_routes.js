@@ -1,9 +1,10 @@
 
 
 const { Router } = require('express');
-const { check, body } = require('express-validator');
+const { check } = require('express-validator');
 
 const { usuarioGet, usuarioPost, usuarioPut, usuarioDelete } = require('../controllers/usuario_controller');
+const { esRolValido, existeCorreo, existeId } = require('../helpers/db-validators');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = new Router();
@@ -14,14 +15,21 @@ router.get('/', usuarioGet);
 //  --el middleware se corre antes que el controlador
 //3° parametro: controlador
 router.post('/', [
-    check('nombre', 'EL nombre es obligatorio').not().isEmpty(),
+    check('nombre', 'EL nombre es obligatorio').not().isEmpty(),    
     check('password', 'EL password debe tener al menos 6 caracteres').isLength({ min: 6 }),
-    check('correo','El correo no es valido').isEmail()   ,
-    check('rol','No es un rol valido').isIn(['ADMIN_ROL','USER_ROL']),
+    check('correo','El correo no es valido').isEmail(),
+    check('correo').custom( existeCorreo ),
+    //check('rol','No es un rol valido').isIn(['ADMIN_ROL','USER_ROL']),
+    check('rol').custom( esRolValido ),  //check('rol').custom( rol => esRolValido(rol) ),    
     validarCampos
 ], usuarioPost);
 
-router.put('/:id', usuarioPut);
+router.put('/:id',[
+    check('id','No es un id valido').isMongoId(),
+    check('id').custom( existeId ),
+    check('rol').custom( esRolValido ), 
+    validarCampos
+], usuarioPut);
 
 router.delete('/', usuarioDelete);
 

@@ -34,6 +34,8 @@ btnEnviar.addEventListener( 'click', () => {
         date : new Date().getTime()
     }
     
-    socket.emit( 'enviar-msj', payload);
+    socket.emit( 'enviar-msj', payload, ( id ) => {
+        console.log('Devolucion en callback', id );
+    });
 });
 

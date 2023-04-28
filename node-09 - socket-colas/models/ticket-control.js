@@ -36,7 +36,7 @@ class TicketControl {
     
     guardarDB(){
         const dbpath = path.join( __dirname + '/../db/data.json' );
-        console.log( dbpath );
+        //console.log( dbpath );
         fs.writeFileSync( dbpath, JSON.stringify( this.toJSON ) ); 
     }
 
@@ -51,21 +51,19 @@ class TicketControl {
     }
 
     siguiente(){
-        this.siguiente += 1;
+        this.ultimo += 1;
         const ticket = new Ticket( this.ultimo, null);
         this.tickets.push( ticket );
 
         this.guardarDB();
 
-        return 'Ticket ' + this.numero;
+        return 'Ticket ' + ticket.numero;
     }
 
     atenderTicket( escritorio ){
-        
-        if( this.tickets.lenght === 0 ){
+        if( this.tickets.length === 0 ){
             return null;
         }
-
         const ticket = this.tickets.shift();
 
         ticket.escritorio = escritorio;
@@ -81,6 +79,9 @@ class TicketControl {
         return ticket;
     }
 
+    pendientes(){
+        return this.tickets.length;
+    }
 
 
 }

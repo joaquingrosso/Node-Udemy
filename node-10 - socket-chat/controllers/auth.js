@@ -105,8 +105,24 @@ const googleSignin = async(req, res = response) => {
 }
 
 
+const renovarToken = async ( req, res = response ) => {
+    
+    //al final del middleware "validarJWT" se deja el usuario en la req 
+    const { usuario } = req;
+    
+    const token = await generarJWT( usuario.id );
+
+    res.json({
+        usuario,
+        token
+    });
+
+}
+
+
 
 module.exports = {
     login,
-    googleSignin
+    googleSignin,
+    renovarToken
 }

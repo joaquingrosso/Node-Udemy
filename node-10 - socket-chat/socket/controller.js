@@ -17,17 +17,31 @@ const socketController = async ( socket = new Socket(), io ) => {
     //agregar usuario conectado
     chatData.conectarUsuario(usuario);
     io.emit('usuarios-activos', chatData.usuariosArr);
-    
+    socket.emit('recibir-mensajes', chatData.ultimos10);
+
+    //conectar usuario conectado a una sala especial
+    socket.join(usuario.id);
 
     //desconectar usuario
-    socket.on('disconnect', () => {
+    socket.on('disconnect', (payload) => {
+        console.log('se quieren desconectar', payload)
         chatData.desconectarUsuario( usuario.id );
         io.emit('usuarios-activos', chatData.usuariosArr);
+        socket.disconnect();
     });
 
     socket.on('enviar-mensaje', ({ mensaje, uid }) => {
-        chatData.enviarMensaje(usuario.id, usuario.nombre, mensaje);
-        io.emit('recibir-mensajes', chatData.ultimos10);
+
+        if( uid ){
+            //Mensaje Privado
+            socket.to( uid ).emit('mensaje-privado', { de: usuario.nombre, mensaje });
+
+        } else {   
+            
+            chatData.enviarMensaje(usuario.id, usuario.nombre, mensaje);
+            io.emit('recibir-mensajes', chatData.ultimos10);
+
+        }
     });
 
 

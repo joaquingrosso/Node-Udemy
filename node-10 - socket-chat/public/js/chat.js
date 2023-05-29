@@ -50,22 +50,22 @@ const conectarSocket = () => {
 
     socket.on('disconnect', () => {
         console.log('Socket desconectado!');
+        localStorage.removeItem('x-token');
+        window.location = 'index.html';
     });
 
-    socket.on('recibir-mensajes', (payload) => {
-        console.log(payload);
-    });
+    socket.on('recibir-mensajes', dibujarMensajes);
 
     socket.on('usuarios-activos', dibujarUsuarios);
 
-    socket.on('mensaje-privado', () => {
-        //TODO 
+    socket.on('mensaje-privado', (payload) => {
+        console.log('Privado: ', payload);
     });
 
 };
 
 const dibujarUsuarios = ( usuarios = [] ) => {
-    console.log(usuarios)
+
     let usuariosHTML = '';
     usuarios.forEach( ({nombre, uid }) => {
         usuariosHTML += `
@@ -80,7 +80,24 @@ const dibujarUsuarios = ( usuarios = [] ) => {
     });
 
     ulUsuarios.innerHTML = usuariosHTML;
+}
 
+const dibujarMensajes = ( mensajes = [] ) => {
+
+    let mensajesHTML = '';
+    mensajes.forEach( ({nombre, msj }) => {
+        mensajesHTML += `
+            <li>
+                <p>
+                    <span class='text-success'> ${ nombre } </span>
+                    <span> ${ msj } </span>
+                </p>
+            </li>
+        
+        `
+    });
+
+    ulMensajes.innerHTML = mensajesHTML;
 }
 
 
@@ -95,6 +112,10 @@ txtMsj.addEventListener('keyup', ({keyCode}) => {
 
     txtMsj.value = '';
 
+});
+
+btnSalir.addEventListener('click', () => {
+    socket.disconnect();
 });
 
 

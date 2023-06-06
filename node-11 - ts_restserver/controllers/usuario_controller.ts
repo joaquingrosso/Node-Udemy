@@ -20,7 +20,8 @@ export const getUsuario = ( req: Request, res: Response) => {
 
 export const postUsuario = ( req: Request, res: Response) => {
     
-    const { body } = req;
+    const  body  = req.body;
+    console.log(body);
 
     return res.json({
         msg : 'postUsuario',

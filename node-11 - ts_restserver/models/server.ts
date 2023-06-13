@@ -1,46 +1,65 @@
-
-import dotenv from 'dotenv';
-import express from 'express';
+import express, { Application } from 'express';
+import userRoutes from '../routes/usuario_routes';
 import cors from 'cors';
 
-import userRoutes from '../routes/usuario_routes';
+import db from '../db/connection';
+
 
 class Server {
 
-    private app  : express.Application;
-    private port : string;
-    private paths = {
-        usuarios : '/api/usuarios'
+    private app: Application;
+    private port: string;
+    private apiPaths = {
+        usuarios: '/api/usuarios'
     }
 
-    constructor(){
+    constructor() {
         this.app  = express();
         this.port = process.env.PORT || '8000';
 
+        // Métodos iniciales
+        this.dbConnection();
         this.middlewares();
         this.routes();
     }
 
-    middlewares(){
-        //cors
+    async dbConnection() {
+
+        try {
+            
+            await db.authenticate();
+            console.log('Database online');
+
+        } catch (err) {
+            throw err;
+        }
+
+    }
+
+    middlewares() {
+
+        // CORS
         this.app.use( cors() );
 
-        //para poder leer el body
+        // Lectura del body
         this.app.use( express.json() );
 
-        //carpeta publica
+        // Carpeta pública
         this.app.use( express.static('public') );
     }
 
-    routes(){
-        this.app.use( this.paths.usuarios, userRoutes );
+
+    routes() {
+        this.app.use( this.apiPaths.usuarios, userRoutes )
     }
 
-    listen(){
+
+    listen() {
         this.app.listen( this.port, () => {
-            console.log('Servidor corriendo en puesto: ', this.port, '!');
-        });
-    };
+            console.log('Servidor corriendo en puerto ' + this.port );
+        })
+    }
+
 }
 
 export default Server;
